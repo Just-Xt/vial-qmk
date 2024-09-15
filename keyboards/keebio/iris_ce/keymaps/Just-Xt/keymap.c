@@ -2,6 +2,15 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
+#include "keymap.h"
+
+#ifdef TAP_DANCE_ENABLE
+   #include "tapdance.c"
+#endif
+
+#ifdef COMBO_ENABLE
+   #include "combo.c"
+#endif
 
 enum custom_layers {
      _MAIN,
@@ -11,11 +20,16 @@ enum custom_layers {
      _GAMING
 };
 
-const uint16_t PROGMEM double_shift_caps[] = {KC_LSFT, KC_RSFT, COMBO_END};
-
-combo_t custom_key_combos[] = {
-    COMBO(double_shift_caps, KC_CAPS)
-};
+void keyboard_post_init_user(void) {
+   
+  #ifdef TAP_DANCE_ENABLE
+  install_tap_dance_entries();
+  #endif
+   
+  #ifdef COMBO_ENABLE
+  install_combo_entries();
+  #endif
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -23,13 +37,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────-┬────────-┬───────-─┬─────-───┬────-────┬──────-──┐                            ┌────────-┬────────-┬───────-─┬─────-───┬────-────┬──────-──┐
      KC_ESCAPE, KC_1,    KC_2,     KC_3,     KC_4,     KC_5,                                  KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_DEL,
   //├─────-───┼────-────┼──-──────┼───-─────┼──-──────┼────-────┤                            ├─────-───┼────-────┼──-──────┼───-─────┼──-──────┼────-────┤
-     KC_TAB,   KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,                                  KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     LT(0, KC_LBRC),
+     KC_TAB,   KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,                                  KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     TD(1),
   //├────-────┼──────-──┼────-────┼────-────┼──-──────┼────-────┤                            ├─────-───┼────-────┼──-──────┼───-─────┼──-──────┼────-────┤
      KC_LCTL,  KC_A,     KC_S,     KC_D,     KC_F,     KC_G,                                  KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,
   //├──────-──┼─────-───┼────-────┼─────-───┼───-─────┼───-─────┼───-─────┐        ┌───-─────┼────-────┼───-─────┼─────-───┼─────-───┼─────-───┼───-─────┤
      KC_LSFT,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_BSPC,           KC_ENT,   KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_RSFT,
   //└───-─────┴─────-───┴──────-──┴───┬──-──┴───┬──-──┴───┬──-──┴───┬─-───┘        └─-──┬────┴─-──┬────┴──-─┬────┴──-─┬────┴─-───────┴────-────┴──-──────┘
-                                       KC_LGUI,  TL_LOWR,  MT(MOD_RCTL, KC_SPC),                       KC_BSPC,  TL_UPPR,  KC_RALT
+                                       KC_LGUI,  TL_LOWR,  TD(0),                       KC_BSPC,  TL_UPPR,  KC_RALT
                                    // └─────-───┴───-─────┴─────-───┘                   └──────-──┴───-─────┴─────-───┘
   ),
 
@@ -37,11 +51,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //┌────────-┬────────-┬───────-─┬─────-───┬────-────┬──────-──┐                            ┌────────-┬────────-┬───────-─┬─────-───┬────-────┬──────-──┐
      KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,                                 KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,
   //├─────-───┼────-────┼──-──────┼───-─────┼──-──────┼────-────┤                            ├─────-───┼────-────┼──-──────┼───-─────┼──-──────┼────-────┤
-     KC_NO,    KC_NO,    KC_HOME,  KC_UP,    KC_END,   LSFT(KC_7),                  LSFT(KC_GRAVE), KC_KP_SLASH, RALT(KC_GRAVE), KC_GRAVE, RALT(KC_SCLN), KC_NO,
+     KC_NO,    KC_NO,    KC_HOME,  KC_UP,    KC_END,   LSFT(KC_7),                            PIPE,    KC_KP_SLASH, BSLASH, KC_GRAVE, HSHTG,    KC_NO,
   //├────-────┼──────-──┼────-────┼────-────┼──-──────┼────-────┤                            ├─────-───┼────-────┼──-──────┼───-─────┼──-──────┼────-────┤
-     _______,  KC_NO,    KC_LEFT,  KC_DOWN,  KC_RIGHT, KC_G,                        LSFT(KC_MINUS), LSFT(KC_9), LSFT(KC_0), RALT(KC_QUOTE), RALT(KC_BSLS), KC_NO,
+     _______,  KC_NO,    KC_LEFT,  KC_DOWN,  KC_RIGHT, KC_MINUS,                              UNDRSC,   KC_LPRN,  KC_RPRN,  LCRLBRC,  RCRLBRC,  KC_NO,
   //├──────-──┼─────-───┼────-────┼─────-───┼───-─────┼───-─────┼───-─────┐        ┌───-─────┼────-────┼───-─────┼─────-───┼─────-───┼─────-───┼───-─────┤
-     _______,  KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_KP_PLUS, _______,         _______,  KC_EQUAL, RALT(KC_LBRC), RALT(KC_RBRC), KC_BSLS, LSFT(KC_BSLS), _______,
+     _______,  KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_KP_PLUS, _______,         _______,  KC_EQUAL, LSQRBRC,  RSQRBRC,  LTHAN,    GTHAN,    _______,
   //└───-─────┴─────-───┴──────-──┴───┬──-──┴───┬──-──┴───┬──-──┴───┬─-───┘        └─-──┬────┴─-──┬────┴──-─┬────┴──-─┬────┴─-───────┴────-────┴──-──────┘
                                        _______, _______, _______,                        _______,  _______, _______
                                    // └─────-───┴───-─────┴─────-───┘                   └──────-──┴───-─────┴─────-───┘
@@ -90,27 +104,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-   // #ifdef COMBO_ENABLE
-   //    if (!process_combo_keycode_user(keycode, record)) { return false; }
-   // #endif
-    
-   switch (keycode) {
-      case LT(0, KC_LBRC): //sends ^ on tap and ¸ on hold
-         if (record->tap.count && record->event.pressed) {
-            return true; // Return true for normal processing of tap keycode
-            break;
-         } else if (record->event.pressed) {
-            tap_code16(KC_RBRC); // Intercept hold function to send RBRC  
-            return false;
-         }
-         return true; // Allows normal processing of key release
-    }
-    
-    return true;
-}
-
-
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     const bool caps_lock = host_keyboard_led_state().caps_lock;
     const uint8_t layer = get_highest_layer(layer_state);
@@ -135,16 +128,24 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             : -1; // Leave at -1 because 0 is KC_NO!
             
          switch (kc) {
+            case QK_BOOT:
+               hsv.h = 0;
+               break;
+               
             case KC_RIGHT ... KC_UP:
-               hsv.h = 252;
+               hsv.h = 135;
                break;
                
             case KC_HOME ... KC_END:
-               hsv.h = 127;
+               hsv.h = 160;
                break;
                
             case KC_MS_U ... KC_WH_R:
-               hsv.h = 252;
+               hsv.h = 222;
+               break;
+               
+            case KC_F1 ... KC_F12:
+               hsv.h = 148;
                break;
                
             case KC_F13 ... KC_F24:

@@ -1,0 +1,14 @@
+#pragma once
+#include QMK_KEYBOARD_H
+
+#define PIPE LSFT(KC_GRAVE)
+#define UNDRSC LSFT(KC_MINUS)
+#define BSLASH RALT(KC_GRAVE)
+#define HSHTG RALT(KC_SCLN)
+
+#define LCRLBRC RALT(KC_QUOTE)
+#define RCRLBRC RALT(KC_BSLS)
+#define LSQRBRC RALT(KC_LBRC)
+#define RSQRBRC RALT(KC_RBRC)
+#define LTHAN KC_BSLS
+#define GTHAN LSFT(KC_BSLS)

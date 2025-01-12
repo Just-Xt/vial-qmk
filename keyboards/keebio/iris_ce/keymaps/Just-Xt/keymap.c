@@ -158,7 +158,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             
             default:
                if (caps_lock 
-                  && ((row == 3 && col == 0) || (row == 8 && col == 0)))
+                  && ((row == 0 && col == 5) || (row == 5 && col == 5)))
                   // sets hue to opposite color on hsv circle, and cuts saturation in half
                   hsv.h = matrix_hsv.h+128, hsv.s >>= 1,
                   hsv.v = RGB_MATRIX_MAXIMUM_BRIGHTNESS;
